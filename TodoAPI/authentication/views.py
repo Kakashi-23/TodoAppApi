@@ -4,31 +4,28 @@ from django.contrib import auth
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-
 from .serializers import UserSerializer, LoginSerializer
+from rest_framework.authtoken.models import Token
 
 
 # Create your views here.
 
 class LoginView(GenericAPIView):
+    authentication_classes = ()
+    permission_classes = ()
     serializer_class = LoginSerializer
 
-    @staticmethod
-    def post(request):
+    def post(self, request):
         data = request.data
-        username = data.get('username', '')
+        email = data.get('email', '')
         password = data.get('password', '')
-        user = auth.authenticate(username=username, password=password)
+        user = auth.authenticate(username=email, password=password)
 
         if user:
-            auth_token = jwt.encode(
-                {'username': user.username},
-                settings.JWT_SETTINGS
-            )
             serializer = UserSerializer(user)
             data = {'status': 'true',
                     'message': 'User Details',
-                    'auth_token': auth_token,
+                    'auth_token': user.auth_token.key,
                     'user_details': serializer.data,
 
                     }
@@ -41,6 +38,8 @@ class LoginView(GenericAPIView):
 
 
 class RegisterUser(GenericAPIView):
+    authentication_classes = ()
+    permission_classes = ()
     serializer_class = UserSerializer
 
     @staticmethod

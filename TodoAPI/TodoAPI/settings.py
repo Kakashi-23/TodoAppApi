@@ -38,7 +38,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'UserDetails',
+    'rest_framework.authtoken',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ), 'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -123,9 +133,8 @@ STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JWT_SETTINGS = 'coming soon'
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
-# AUTHENTICATION_BACKENDS = ('authentication.backend.EmailBackend',)
+AUTHENTICATION_BACKENDS = ('authentication.backend.EmailBackend',)
